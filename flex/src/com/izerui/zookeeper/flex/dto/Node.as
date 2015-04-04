@@ -30,9 +30,9 @@ public class Node implements IValueObject {
      */
     public var hasChildren:Boolean;
 
-    /**
-     * 全路径
-     */
-    public var fullPath:String;
+//    /**
+//     * 全路径
+//     */
+//    public var fullPath:String;
 }
 }
