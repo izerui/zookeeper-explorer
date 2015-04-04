@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+               xmlns:s="library://ns.adobe.com/flex/spark"
+               xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:flex="com.izerui.zookeeper.flex.*" creationComplete="creationCompleteHandler(event)">
+
+    <s:layout>
+        <s:VerticalLayout/>
+    </s:layout>
+
+    <fx:Script>
+        <![CDATA[
+        import com.adobe.cairngorm.control.CairngormEventDispatcher;
+        import com.izerui.zookeeper.flex.dto.Node;
+        import com.izerui.zookeeper.flex.event.GetChildrenEvent;
+
+        import mx.collections.ArrayCollection;
+        import mx.events.AdvancedDataGridEvent;
+        import mx.events.FlexEvent;
+
+        [Bindable]
+        private var treeData:ArrayCollection;
+
+        private function button1_clickHandler(event:MouseEvent):void {
+            var parent:Node = new Node();
+            parent.name = "/";
+            CairngormEventDispatcher.getInstance().dispatchEvent(new GetChildrenEvent(parent, function (data:ArrayCollection):void {
+                myADG.dataProvider = data;
+            }));
+//            CairngormEventDispatcher.getInstance().dispatchEvent(new GetTreeEvent(function (data:ArrayCollection):void {
+//                treeData = data;
+//            }));
+
+        }
+
+        private function creationCompleteHandler(event:FlexEvent):void {
+            var root:Node = new Node();
+            root.name = "/";
+            root.hasChildren = true;
+//            root.children = new ArrayCollection();
+            wrapChildren(root);
+            treeData = new ArrayCollection([root]);
+        }
+
+        private function myADG_itemOpenHandler(event:AdvancedDataGridEvent):void {
+            var eventItem:Node = (event.item as Node);
+            if(eventItem&&eventItem.children){
+                for each(var child:Node in eventItem.children){
+                    wrapChildren(child);
+                }
+//                myADG.validateNow();
+            }
+        }
+
+        private function wrapChildren(node:Node):void{
+            //当有子节点，并且children为空，则需要加载
+            if((node.children==null||node.children.length==0)&&node.hasChildren){
+                CairngormEventDispatcher.getInstance().dispatchEvent(new GetChildrenEvent(node, function (data:ArrayCollection):void {
+                    node.children = data;
+                    treeData.itemUpdated(node);
+                }));
+            }
+        }
+
+        ]]>
+    </fx:Script>
+
+    <fx:Declarations>
+        <flex:Services/>
+        <flex:Controller/>
+    </fx:Declarations>
+
+    <mx:Button label="load data" click="button1_clickHandler(event)"/>
+
+    <mx:Panel title="zookeeper"
+              height="100%" width="100%" layout="horizontal"
+              paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10">
+
+        <mx:AdvancedDataGrid id="myADG"
+                             width="100%" height="100%" itemOpen="myADG_itemOpenHandler(event)">
+
+            <mx:dataProvider>
+                <mx:HierarchicalData source="{treeData}"
+                                     childrenField="children"/>
+            </mx:dataProvider>
+
+            <mx:columns>
+                <mx:AdvancedDataGridColumn dataField="name" headerText="path"/>
+                <mx:AdvancedDataGridColumn dataField="data"/>
+            </mx:columns>
+        </mx:AdvancedDataGrid>
+    </mx:Panel>
+
+</s:Application>
