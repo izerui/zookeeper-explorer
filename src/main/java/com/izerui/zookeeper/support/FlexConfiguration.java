@@ -38,7 +38,7 @@ public class FlexConfiguration {
     @Bean(name = BeanIds.MESSAGE_BROKER)
     public MessageBrokerFactoryBean messageBrokerFactoryBean(ApplicationContext applicationContext){
         MessageBrokerFactoryBean messageBrokerFactoryBean = new MessageBrokerFactoryBean();
-        messageBrokerFactoryBean.setServicesConfigPath("/WEB-INF/flex/services-config.xml");
+        messageBrokerFactoryBean.setServicesConfigPath("classpath:flex/services-config.xml");
 
         // http://docs.spring.io/spring-flex/docs/1.6.x/reference/html/#security-filter-config
         Map<String, MessageBrokerConfigProcessor> beansOfType = applicationContext.getBeansOfType(MessageBrokerConfigProcessor.class);
