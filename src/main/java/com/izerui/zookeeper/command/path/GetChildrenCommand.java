@@ -1,11 +1,10 @@
 package com.izerui.zookeeper.command.path;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import com.izerui.zookeeper.command.Command;
+import com.izerui.zookeeper.dto.Node;
 import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.utils.ZKPaths;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,24 +13,42 @@ import java.util.List;
  */
 public class GetChildrenCommand implements Command {
 
-    protected String path;
-    private List<String> children;
+    protected Node parent;
+    private List<Node> children;
 
-    public GetChildrenCommand(String path) {
-        this.path = path;
+    public GetChildrenCommand(Node parent) {
+        this.parent = parent;
     }
 
     @Override
     public void command(CuratorFramework client) throws Exception {
-        children = Lists.transform(client.getChildren().forPath(path), new Function<String, String>() {
-            @Override
-            public String apply(String input) {
-                return ZKPaths.makePath(path,input);
+        List<String> list = client.getChildren().forPath(parent.getFullPath());
+        if(list!=null&&list.size()>0){
+            parent.setHasChildren(true);
+            children = new ArrayList<Node>();
+            for(String path:list){
+                Node node = new Node();
+                node.setParent(parent);
+                node.setName(path);
+
+                //补充hasChildren 和 data属性
+                List<String> grandson = client.getChildren().forPath(node.getFullPath());
+                boolean hasChildren = grandson!=null&&grandson.size()>0;
+                node.setHasChildren(hasChildren);
+                if(!hasChildren){
+                    node.setData(client.getData().forPath(node.getFullPath()));
+                }
+                children.add(node);
             }
-        });
+            parent.setChildren(children);
+        }
     }
 
-    public List<String> getChildren() {
+    public List<Node> getChildren() {
         return children;
+    }
+
+    public Node getParent() {
+        return parent;
     }
 }

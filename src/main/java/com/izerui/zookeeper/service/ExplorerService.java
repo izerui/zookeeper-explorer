@@ -1,13 +1,14 @@
 package com.izerui.zookeeper.service;
 
-import com.izerui.zookeeper.support.ZkConfig;
 import com.izerui.zookeeper.command.Command;
 import com.izerui.zookeeper.command.connect.CloseCommand;
 import com.izerui.zookeeper.command.connect.StateCommand;
 import com.izerui.zookeeper.command.listener.NodeCacheListenerCommand;
 import com.izerui.zookeeper.command.listener.PathChildrenCacheListenerCommand;
 import com.izerui.zookeeper.command.path.*;
+import com.izerui.zookeeper.dto.Node;
 import com.izerui.zookeeper.support.ZkClientException;
+import com.izerui.zookeeper.support.ZkConfig;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.imps.CuratorFrameworkState;
@@ -46,7 +47,9 @@ public class ExplorerService implements InitializingBean,DisposableBean {
             if(client==null){
                 throw new ZkClientException("未建立连接");
             }
+            long beforeTime = System.currentTimeMillis();
             command.command(client);
+            logger.debug("execute time:{}", System.currentTimeMillis()-beforeTime);
             return command;
         }catch (Exception e){
             throw new ZkClientException(e);
@@ -100,9 +103,14 @@ public class ExplorerService implements InitializingBean,DisposableBean {
         execute(new DeletePathCommand(path));
     }
 
-    public List<String> getChildren(String path) {
-        return execute(new GetChildrenCommand(path)).getChildren();
+    public List<Node> getTree() {
+        return execute(new GetTreeCommand()).getNodes();
     }
+
+    public List<Node> getChildren(Node parent){
+        return execute(new GetChildrenCommand(parent)).getChildren();
+    }
+
 
     public byte[] getData(String path){
         return execute(new GetDataCommand(path)).getData();

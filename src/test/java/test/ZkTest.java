@@ -1,6 +1,7 @@
 package test;
 
 import com.izerui.zookeeper.Application;
+import com.izerui.zookeeper.dto.Node;
 import com.izerui.zookeeper.service.ExplorerService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -23,10 +23,15 @@ public class ZkTest {
 
     @Test
     public void list()  {
-        List<String> children = service.getChildren("/");
-        for (String path:children){
-            System.out.println(path);
-            System.out.println(service.getData(path));
-        }
+        List<Node> nodes = service.getTree();
+        System.out.println(nodes.toString());
+    }
+
+    @Test
+    public void testChildren(){
+        Node node = new Node();
+        node.setName("/");
+        List<Node> children = service.getChildren(node);
+        System.out.println(children.toString());
     }
 }
