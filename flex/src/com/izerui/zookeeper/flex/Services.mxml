@@ -5,7 +5,7 @@
 	
 	<fx:Declarations>
 		
-		<mx:RemoteObject id="explorerService"  destination="explorerService"/>
+		<mx:RemoteObject id="explorerService"  destination="explorerService" showBusyCursor="true"/>
 		
 	</fx:Declarations>
 	

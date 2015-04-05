@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
                xmlns:s="library://ns.adobe.com/flex/spark"
-               xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:flex="com.izerui.zookeeper.flex.*" creationComplete="creationCompleteHandler(event)">
+               xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:flex="com.izerui.zookeeper.flex.*" creationComplete="loadRootPath();">
 
     <s:layout>
-        <s:VerticalLayout/>
+        <s:VerticalLayout verticalAlign="middle" horizontalAlign="center"/>
     </s:layout>
 
     <fx:Script>
@@ -15,24 +15,13 @@
 
         import mx.collections.ArrayCollection;
         import mx.events.AdvancedDataGridEvent;
-        import mx.events.FlexEvent;
+        import mx.events.ItemClickEvent;
+        import mx.events.ListEvent;
 
         [Bindable]
         private var treeData:ArrayCollection;
 
-        private function button1_clickHandler(event:MouseEvent):void {
-            var parent:Node = new Node();
-            parent.name = "/";
-            CairngormEventDispatcher.getInstance().dispatchEvent(new GetChildrenEvent(parent, function (data:ArrayCollection):void {
-                myADG.dataProvider = data;
-            }));
-//            CairngormEventDispatcher.getInstance().dispatchEvent(new GetTreeEvent(function (data:ArrayCollection):void {
-//                treeData = data;
-//            }));
-
-        }
-
-        private function creationCompleteHandler(event:FlexEvent):void {
+        private function loadRootPath():void {
             var root:Node = new Node();
             root.name = "/";
             root.hasChildren = true;
@@ -41,19 +30,17 @@
             treeData = new ArrayCollection([root]);
         }
 
-        private function myADG_itemOpenHandler(event:AdvancedDataGridEvent):void {
-            var eventItem:Node = (event.item as Node);
-            if(eventItem&&eventItem.children){
-                for each(var child:Node in eventItem.children){
+        private function openTreeNode(item:Node):void {
+            if (item && item.children) {
+                for each(var child:Node in item.children) {
                     wrapChildren(child);
                 }
-//                myADG.validateNow();
             }
         }
 
-        private function wrapChildren(node:Node):void{
+        private function wrapChildren(node:Node):void {
             //当有子节点，并且children为空，则需要加载
-            if((node.children==null||node.children.length==0)&&node.hasChildren){
+            if ((node.children == null || node.children.length == 0) && node.hasChildren) {
                 CairngormEventDispatcher.getInstance().dispatchEvent(new GetChildrenEvent(node, function (data:ArrayCollection):void {
                     node.children = data;
                     treeData.itemUpdated(node);
@@ -61,22 +48,36 @@
             }
         }
 
+        private function linkButtonBar_itemClickHandler(event:ItemClickEvent):void {
+            switch (event.label) {
+                case "reload":
+                    loadRootPath();
+                    break;
+                case "export":
+                    navigateToURL(new URLRequest("export"),"_blank");
+                    break;
+            }
+        }
+
+        private function myADG_itemDoubleClickHandler(event:ListEvent):void {
+            myADG.expandItem(myADG.selectedItem,!myADG.isItemOpen(myADG.selectedItem),true);
+            openTreeNode(myADG.selectedItem as Node);
+        }
         ]]>
     </fx:Script>
+
+    <fx:Style source="/assets/css/index.css"/>
 
     <fx:Declarations>
         <flex:Services/>
         <flex:Controller/>
     </fx:Declarations>
 
-    <mx:Button label="load data" click="button1_clickHandler(event)"/>
-
     <mx:Panel title="zookeeper"
-              height="100%" width="100%" layout="horizontal"
-              paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10">
+              height="90%" width="90%">
 
-        <mx:AdvancedDataGrid id="myADG"
-                             width="100%" height="100%" itemOpen="myADG_itemOpenHandler(event)">
+        <mx:AdvancedDataGrid id="myADG" sortableColumns="false" sortExpertMode="true"
+                             width="100%" height="100%" itemOpen="openTreeNode((event.item as Node))" doubleClickEnabled="true" itemDoubleClick="myADG_itemDoubleClickHandler(event)">
 
             <mx:dataProvider>
                 <mx:HierarchicalData source="{treeData}"
@@ -84,11 +85,35 @@
             </mx:dataProvider>
 
             <mx:columns>
-                <mx:AdvancedDataGridColumn dataField="name" headerText="path"/>
-                <mx:AdvancedDataGridColumn dataField="data"/>
-                <mx:AdvancedDataGridColumn dataField="childNum"/>
+                <mx:AdvancedDataGridColumn dataTipField="name" dataField="name" headerText="path"/>
+                <mx:AdvancedDataGridColumn dataField="childNum">
+                    <mx:itemRenderer>
+                        <fx:Component>
+                            <mx:Label text="{(data as Node).children.length}" paddingLeft="5">
+                                <fx:Script><![CDATA[
+                                    import com.izerui.zookeeper.flex.dto.Node;
+                                    ]]></fx:Script>
+                            </mx:Label>
+                        </fx:Component>
+                    </mx:itemRenderer>
+                </mx:AdvancedDataGridColumn>
+                <mx:AdvancedDataGridColumn dataTipField="data" dataField="data"/>
             </mx:columns>
         </mx:AdvancedDataGrid>
+        <mx:ControlBar>
+            <s:HGroup horizontalAlign="right">
+                <mx:LinkBar id="linkButtonBar" iconField="ico" itemClick="linkButtonBar_itemClickHandler(event)">
+                    <mx:dataProvider>
+                        <s:ArrayCollection>
+                            <fx:Object label="reload" itemData="0" ico="@Embed('/assets/img/reload.png')"/>
+                            <fx:Object label="add" itemData="0" ico="@Embed('/assets/img/add.png')" />
+                            <fx:Object label="delete" itemData="2" ico="@Embed('/assets/img/delete.png')"/>
+                            <fx:Object label="export" itemData="3" ico="@Embed('/assets/img/export.png')"/>
+                        </s:ArrayCollection>
+                    </mx:dataProvider>
+                </mx:LinkBar>
+            </s:HGroup>
+        </mx:ControlBar>
     </mx:Panel>
 
 </s:Application>

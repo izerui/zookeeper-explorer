@@ -1,5 +1,7 @@
 package com.izerui.zookeeper.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.izerui.zookeeper.support.ZkClientException;
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,14 +18,17 @@ public class Node implements Serializable {
     /**
      * 节点名称
      */
+    @JsonIgnore
     private String name;
     /**
      * 节点data value
      */
+    @JsonProperty("data")
     private byte[] data;
     /**
      * 父节点
      */
+    @JsonIgnore
     private Node parent;
     /**
      * 子节点列表
@@ -78,6 +83,7 @@ public class Node implements Serializable {
         }
     }
 
+    @JsonProperty("path")
     public String getFullPath(){
         if(name==null||name.equals("")){
             throw new ZkClientException("节点path不能为空");
@@ -89,6 +95,14 @@ public class Node implements Serializable {
         appendParentPath(pathArray,this);
         Collections.reverse(pathArray);
         return StringUtils.join(pathArray,"/").replaceFirst("/","");
+    }
+
+    @JsonProperty("childrenNum")
+    public int getChildrenNum(){
+        if(children!=null){
+            return children.size();
+        }
+        return 0;
     }
 
     private void appendParentPath(List<String> pathArray,Node node){

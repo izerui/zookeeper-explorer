@@ -1,0 +1,13 @@
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+
+/*
+//------------------------------
+//  Application
+//------------------------------
+*/
+s|Application
+{
+    fontSize: 12;
+}
