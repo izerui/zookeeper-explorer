@@ -36,7 +36,7 @@
             var root:Node = new Node();
             root.name = "/";
             root.hasChildren = true;
-//            root.children = new ArrayCollection();
+            //预先加载父节点
             wrapChildren(root);
             treeData = new ArrayCollection([root]);
         }
@@ -86,6 +86,7 @@
             <mx:columns>
                 <mx:AdvancedDataGridColumn dataField="name" headerText="path"/>
                 <mx:AdvancedDataGridColumn dataField="data"/>
+                <mx:AdvancedDataGridColumn dataField="childNum"/>
             </mx:columns>
         </mx:AdvancedDataGrid>
     </mx:Panel>

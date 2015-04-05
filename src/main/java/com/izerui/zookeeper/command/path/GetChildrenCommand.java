@@ -32,13 +32,13 @@ public class GetChildrenCommand implements Command {
                 node.setName(path);
 
                 //补充hasChildren 和 data属性
-                List<String> grandson = client.getChildren().forPath(node.getFullPath());
-                boolean hasChildren = grandson!=null&&grandson.size()>0;
-                node.setHasChildren(hasChildren);
-                if(!hasChildren){
+                List<String> grandSon = client.getChildren().forPath(node.getFullPath());
+                boolean hasGrandSon = grandSon!=null&&grandSon.size()>0;
+                node.setHasChildren(hasGrandSon);
+                if(!hasGrandSon){
                     node.setData(client.getData().forPath(node.getFullPath()));
                 }
-                children.add(node);
+                this.children.add(node);
             }
             parent.setChildren(children);
         }
