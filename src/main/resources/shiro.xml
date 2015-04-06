@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <description>apache shiro</description>
+
+       <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+              <property name="securityManager" ref="securityManager" />
+              <property name="successUrl" value="/" />
+              <property name="unauthorizedUrl" value="/unauthorized" />
+              <!--
+                     /             必须登录，且具有administrator角色才可以访问
+                     /export       必须登录，且具有guest角色才可以访问
+                     /**           必须登录
+               -->
+              <property name="filterChainDefinitions">
+                     <value>
+                            / = authcBasic,roles[administrator]
+                            /export = authcBasic,roles[guest]
+                            /** = authcBasic
+                     </value>
+              </property>
+       </bean>
+
+       <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+              <property name="realm" ref="propertiesRealm"/>
+       </bean>
+
+       <bean id="propertiesRealm" class="org.apache.shiro.realm.text.PropertiesRealm" init-method="onInit">
+              <property name="resourcePath" value="classpath:security.xml"/>
+              <property name="useXmlFormat" value="true"/>
+       </bean>
+
+</beans>

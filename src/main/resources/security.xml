@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+       <!-- key格式： user.[用户名]   value格式:[密码,角色1,角色2...]-->
+       <comment>保存登录用户/密码/角色/权限集</comment>
+       <entry key="user.root">root1234,administrator,guest</entry>
+       <entry key="user.guest">guest1234,guest</entry>
+       <!-- key格式： role.[角色名]   value格式:[perms1,perms2...]-->
+       <entry key="role.administrator">*</entry>
+       <entry key="role.guest">guest:*</entry>
+</properties>
