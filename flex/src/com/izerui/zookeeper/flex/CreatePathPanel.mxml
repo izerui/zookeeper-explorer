@@ -9,10 +9,6 @@
           layout="vertical"
           width="400" height="300" verticalAlign="middle" horizontalAlign="center">
 
-    <fx:Metadata>
-        [Event(name="wrapNodeChildrenEvent", type="com.izerui.zookeeper.flex.event.WrapNodeChildrenEvent")]
-    </fx:Metadata>
-
     <fx:Script>
 		<![CDATA[
         import com.adobe.cairngorm.control.CairngormEventDispatcher;
@@ -51,7 +47,6 @@
                         childNode.hasChildren = false;
                         childNode.parent = parentNode;
                         parentNode.children.addItem(childNode);
-//                        dispatchEvent(new WrapNodeChildrenEvent(parentNode));
                         close();
                     }
             ));

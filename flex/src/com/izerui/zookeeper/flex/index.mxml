@@ -12,12 +12,12 @@
         <![CDATA[
         import com.adobe.cairngorm.control.CairngormEventDispatcher;
         import com.izerui.zookeeper.flex.dto.Node;
+        import com.izerui.zookeeper.flex.event.DeletePathEvent;
         import com.izerui.zookeeper.flex.event.GetChildrenEvent;
-        import com.izerui.zookeeper.flex.event.WrapNodeChildrenEvent;
 
         import mx.collections.ArrayCollection;
-        import mx.core.FlexGlobals;
-        import mx.events.AdvancedDataGridEvent;
+        import mx.controls.Alert;
+        import mx.events.CloseEvent;
         import mx.events.ItemClickEvent;
         import mx.events.ListEvent;
         import mx.managers.PopUpManager;
@@ -42,9 +42,9 @@
             }
         }
 
-        private function wrapChildren(node:Node,forcibly:Boolean=false):void {
+        private function wrapChildren(node:Node, forcibly:Boolean = false):void {
             //当有子节点，并且children为空，则需要加载
-            if (((node.children == null || node.children.length == 0) && node.hasChildren)||forcibly) {
+            if (((node.children == null || node.children.length == 0) && node.hasChildren) || forcibly) {
                 CairngormEventDispatcher.getInstance().dispatchEvent(new GetChildrenEvent(node, function (data:ArrayCollection):void {
                     node.children = data;
                     treeData.itemUpdated(node);
@@ -72,6 +72,25 @@
                     PopUpManager.addPopUp(createPathPanel, this, true);
                     PopUpManager.centerPopUp(createPathPanel);
                     createPathPanel.setFocus();
+                    break;
+                case "delete":
+                    if (myADG.selectedIndex == -1) {
+                        return;
+                    }
+                    if (myADG.selectedItem.children != null && myADG.selectedItem.children.length > 0) {
+                        Alert.show("delete the children node before this!", "error");
+                        return;
+                    }
+                    Alert.show("Are you sure you want to delete it?", "delete", Alert.YES | Alert.NO, null, function (event:CloseEvent):void {
+                        if (event.detail == Alert.YES) {
+                            CairngormEventDispatcher.getInstance().dispatchEvent(new DeletePathEvent(myADG.selectedItem as Node,
+                                    function(data:Object):void{
+                                        var children:ArrayCollection = (myADG.selectedItem as Node).parent.children;
+                                        children.removeItemAt(children.getItemIndex((myADG.selectedItem as Node)));
+                                    }
+                            ));
+                        }
+                    });
                     break;
             }
         }
