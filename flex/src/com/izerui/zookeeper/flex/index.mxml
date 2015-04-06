@@ -118,6 +118,16 @@
             myADG.expandItem(myADG.selectedItem, !myADG.isItemOpen(myADG.selectedItem), true);
             openTreeNode(myADG.selectedItem as Node);
         }
+
+        [Bindable]
+        public function get endpoint():String{
+            var url:String = this.url;
+            url = url.substring(0,url.lastIndexOf("/"));
+            trace(url);
+            url += "/messagebroker/amf";
+            return url;
+        }
+
         ]]>
     </fx:Script>
 

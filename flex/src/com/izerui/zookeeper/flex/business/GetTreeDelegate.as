@@ -1,17 +1,18 @@
 package com.izerui.zookeeper.flex.business {
 import com.adobe.cairngorm.business.ServiceLocator;
+import com.izerui.zookeeper.flex.business.BaseDelegate;
 
 import mx.rpc.AsyncToken;
 import mx.rpc.IResponder;
 import mx.rpc.remoting.RemoteObject;
 
-public class GetTreeDelegate implements IResponder {
+public class GetTreeDelegate extends BaseDelegate implements IResponder {
     private var responder:IResponder;
     private var service:RemoteObject;
 
     public function GetTreeDelegate(responder:IResponder) {
         this.responder = responder;
-        this.service = ServiceLocator.getInstance().getRemoteObject("explorerService");
+        this.service = getRemoteObject("explorerService");
     }
 
     public function getTree():void {

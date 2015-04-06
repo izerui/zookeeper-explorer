@@ -7,13 +7,13 @@ import mx.rpc.AsyncToken;
 import mx.rpc.IResponder;
 import mx.rpc.remoting.RemoteObject;
 
-public class CreatePathDelegate implements IResponder {
+public class CreatePathDelegate extends BaseDelegate implements IResponder {
     private var responder:IResponder;
     private var service:RemoteObject;
 
     public function CreatePathDelegate(responder:IResponder) {
         this.responder = responder;
-        this.service = ServiceLocator.getInstance().getRemoteObject("explorerService");
+        this.service = getRemoteObject("explorerService");
     }
 
     public function createPath(path:String,value:ByteArray,mode:String):void {
