@@ -4,6 +4,7 @@ import com.adobe.cairngorm.vo.IValueObject;
 import flash.utils.ByteArray;
 
 import mx.collections.ArrayCollection;
+import mx.collections.Sort;
 
 [Bindable]
 [RemoteClass(alias="com.izerui.zookeeper.dto.Node")]
@@ -30,9 +31,27 @@ public class Node implements IValueObject {
      */
     public var hasChildren:Boolean;
 
-//    /**
-//     * 全路径
-//     */
-//    public var fullPath:String;
+    /**
+     * 全路径
+     */
+    public function get fullPath():String{
+        if(name == "/"){
+            return name;
+        }
+        var pathArray = new Array();
+        appendParentPath(pathArray,this);
+        pathArray = pathArray.reverse();
+        var fullPath:String = pathArray.join("/");
+        return fullPath.substring(1,fullPath.length);
+
+    }
+
+    private function appendParentPath(pathArray:Array,node:Node):void{
+        pathArray.push(node.name);
+        if(node.parent){
+            appendParentPath(pathArray,node.parent);
+        }
+    }
+
 }
 }

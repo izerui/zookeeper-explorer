@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
                xmlns:s="library://ns.adobe.com/flex/spark"
-               xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:flex="com.izerui.zookeeper.flex.*" creationComplete="loadRootPath();">
+               xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:flex="com.izerui.zookeeper.flex.*"
+               creationComplete="loadRootPath();">
 
     <s:layout>
         <s:VerticalLayout verticalAlign="middle" horizontalAlign="center"/>
@@ -12,11 +13,14 @@
         import com.adobe.cairngorm.control.CairngormEventDispatcher;
         import com.izerui.zookeeper.flex.dto.Node;
         import com.izerui.zookeeper.flex.event.GetChildrenEvent;
+        import com.izerui.zookeeper.flex.event.WrapNodeChildrenEvent;
 
         import mx.collections.ArrayCollection;
+        import mx.core.FlexGlobals;
         import mx.events.AdvancedDataGridEvent;
         import mx.events.ItemClickEvent;
         import mx.events.ListEvent;
+        import mx.managers.PopUpManager;
 
         [Bindable]
         private var treeData:ArrayCollection;
@@ -38,9 +42,9 @@
             }
         }
 
-        private function wrapChildren(node:Node):void {
+        private function wrapChildren(node:Node,forcibly:Boolean=false):void {
             //当有子节点，并且children为空，则需要加载
-            if ((node.children == null || node.children.length == 0) && node.hasChildren) {
+            if (((node.children == null || node.children.length == 0) && node.hasChildren)||forcibly) {
                 CairngormEventDispatcher.getInstance().dispatchEvent(new GetChildrenEvent(node, function (data:ArrayCollection):void {
                     node.children = data;
                     treeData.itemUpdated(node);
@@ -54,13 +58,26 @@
                     loadRootPath();
                     break;
                 case "export":
-                    navigateToURL(new URLRequest("export"),"_blank");
+                    navigateToURL(new URLRequest("export"), "_blank");
+                    break;
+                case "add":
+                    if (myADG.selectedIndex == -1) {
+                        return;
+                    }
+                    var createPathPanel:CreatePathPanel = new CreatePathPanel();
+                    createPathPanel.parentNode = myADG.selectedItem as Node;
+//                    createPathPanel.addEventListener(WrapNodeChildrenEvent.wrapNodeChildrenEvent, function(event:WrapNodeChildrenEvent):void{
+//                       wrapChildren(event.node,true);
+//                    });
+                    PopUpManager.addPopUp(createPathPanel, this, true);
+                    PopUpManager.centerPopUp(createPathPanel);
+                    createPathPanel.setFocus();
                     break;
             }
         }
 
         private function myADG_itemDoubleClickHandler(event:ListEvent):void {
-            myADG.expandItem(myADG.selectedItem,!myADG.isItemOpen(myADG.selectedItem),true);
+            myADG.expandItem(myADG.selectedItem, !myADG.isItemOpen(myADG.selectedItem), true);
             openTreeNode(myADG.selectedItem as Node);
         }
         ]]>
@@ -77,7 +94,8 @@
               height="90%" width="90%">
 
         <mx:AdvancedDataGrid id="myADG" sortableColumns="false" sortExpertMode="true"
-                             width="100%" height="100%" itemOpen="openTreeNode((event.item as Node))" doubleClickEnabled="true" itemDoubleClick="myADG_itemDoubleClickHandler(event)">
+                             width="100%" height="100%" itemOpen="openTreeNode((event.item as Node))"
+                             doubleClickEnabled="true" itemDoubleClick="myADG_itemDoubleClickHandler(event)">
 
             <mx:dataProvider>
                 <mx:HierarchicalData source="{treeData}"
@@ -106,7 +124,7 @@
                     <mx:dataProvider>
                         <s:ArrayCollection>
                             <fx:Object label="reload" itemData="0" ico="@Embed('/assets/img/reload.png')"/>
-                            <fx:Object label="add" itemData="0" ico="@Embed('/assets/img/add.png')" />
+                            <fx:Object label="add" itemData="0" ico="@Embed('/assets/img/add.png')"/>
                             <fx:Object label="delete" itemData="2" ico="@Embed('/assets/img/delete.png')"/>
                             <fx:Object label="export" itemData="3" ico="@Embed('/assets/img/export.png')"/>
                         </s:ArrayCollection>

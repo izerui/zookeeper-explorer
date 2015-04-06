@@ -29,7 +29,7 @@ public class GetChildrenCommond implements IResponder, ICommand
 		
 		public function fault(info:Object):void
 		{
-			Alert.show("连接异常!","提示");
+			Alert.show(info.toString(),"error");
 		}
 		
 		public function execute(event:CairngormEvent):void
