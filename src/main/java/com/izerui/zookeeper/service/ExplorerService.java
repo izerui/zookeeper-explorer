@@ -17,6 +17,7 @@ import org.apache.curator.framework.recipes.cache.NodeCacheListener;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
@@ -56,6 +57,7 @@ public class ExplorerService implements InitializingBean,DisposableBean {
         }
     }
 
+    @RequiresPermissions("roles[administrator]")
     public void connect(){
         try {
             ExponentialBackoffRetry retryPolicy = new ExponentialBackoffRetry(config.getBaseSleepTimeMs(), config.getMaxRetries());
@@ -71,6 +73,7 @@ public class ExplorerService implements InitializingBean,DisposableBean {
     }
 
 
+    @RequiresPermissions("roles[administrator]")
     public void close() {
         execute(new CloseCommand());
     }
@@ -83,22 +86,27 @@ public class ExplorerService implements InitializingBean,DisposableBean {
         return execute(new PathChildrenCacheListenerCommand(path,listener)).getCache();
     }
 
+    @RequiresPermissions("roles[administrator]")
     public void createPath(String path, byte[] data, CreateMode mode) {
         execute(new CreatePathCommand(path,data,mode));
     }
 
+    @RequiresPermissions("roles[administrator]")
     public void createPath(String path, byte[] data) {
         execute(new CreatePathCommand(path,data));
     }
 
+    @RequiresPermissions("roles[administrator]")
     public void createPath(String path,CreateMode mode){
         execute(new CreatePathCommand(path,null,mode));
     }
 
+    @RequiresPermissions("roles[administrator]")
     public void createPath(String path) {
         execute(new CreatePathCommand(path));
     }
 
+    @RequiresPermissions("roles[administrator]")
     public void deletePath(String path) {
         execute(new DeletePathCommand(path));
     }
@@ -116,6 +124,7 @@ public class ExplorerService implements InitializingBean,DisposableBean {
         return execute(new GetDataCommand(path)).getData();
     }
 
+    @RequiresPermissions("roles[administrator]")
     public Stat setData(String path, byte[] data) {
         return execute(new SetDataCommand(path,data)).getStat();
     }

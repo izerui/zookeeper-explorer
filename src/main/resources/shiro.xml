@@ -16,9 +16,7 @@
                -->
               <property name="filterChainDefinitions">
                      <value>
-                            / = authcBasic,roles[administrator]
-                            /export = authcBasic,roles[guest]
-                            /** = authcBasic
+                            /** = authcBasic,roles[guest]
                      </value>
               </property>
        </bean>
@@ -31,5 +29,12 @@
               <property name="resourcePath" value="classpath:security.xml"/>
               <property name="useXmlFormat" value="true"/>
        </bean>
+
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
 
 </beans>
