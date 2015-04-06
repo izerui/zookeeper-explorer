@@ -5,9 +5,9 @@
 <mx:Panel xmlns:fx="http://ns.adobe.com/mxml/2009"
           xmlns:mx="library://ns.adobe.com/flex/mx"
           xmlns:s="library://ns.adobe.com/flex/spark"
-          title="create node"
+          title="create"
           layout="vertical"
-          width="400" height="300" verticalAlign="middle" horizontalAlign="center">
+          width="500" height="350" verticalAlign="middle" horizontalAlign="center">
 
     <fx:Script>
 		<![CDATA[
@@ -64,13 +64,13 @@
     </fx:Declarations>
     <mx:Form>
         <mx:FormItem label="node:">
-            <mx:TextInput id="nodeInput" width="250"/>
+            <mx:TextArea id="nodeInput" width="350" height="80"/>
         </mx:FormItem>
         <mx:FormItem label="data:">
-            <mx:TextArea id="dataArea" width="250" height="60"/>
+            <mx:TextArea id="dataArea" width="350" height="80"/>
         </mx:FormItem>
         <mx:FormItem label="mode:">
-            <mx:ComboBox id="modeComboBox" width="250" selectedIndex="0">
+            <mx:ComboBox id="modeComboBox" width="350" selectedIndex="0">
                 <mx:dataProvider>
                     <mx:ArrayCollection>
                         <fx:Object label="PERSISTENT"/>

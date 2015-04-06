@@ -84,13 +84,32 @@
                     Alert.show("Are you sure you want to delete it?", "delete", Alert.YES | Alert.NO, null, function (event:CloseEvent):void {
                         if (event.detail == Alert.YES) {
                             CairngormEventDispatcher.getInstance().dispatchEvent(new DeletePathEvent(myADG.selectedItem as Node,
-                                    function(data:Object):void{
-                                        var children:ArrayCollection = (myADG.selectedItem as Node).parent.children;
+                                    function (data:Object):void {
+                                        var parentNode:Node = (myADG.selectedItem as Node).parent;
+                                        var children:ArrayCollection = parentNode.children;
                                         children.removeItemAt(children.getItemIndex((myADG.selectedItem as Node)));
+                                        if(children.length==0){
+                                            parentNode.hasChildren = false;
+                                            parentNode.children = null;
+                                            treeData.itemUpdated(parentNode);
+                                        }
                                     }
                             ));
                         }
                     });
+                    break;
+                case "edit":
+                    if (myADG.selectedIndex == -1) {
+                        return;
+                    }
+                    if (myADG.selectedItem.children != null && myADG.selectedItem.children.length > 0) {
+                        return;
+                    }
+                    var editPanel:EditDataPanel = new EditDataPanel();
+                    editPanel.node = myADG.selectedItem as Node;
+                    PopUpManager.addPopUp(editPanel, this, true);
+                    PopUpManager.centerPopUp(editPanel);
+                    editPanel.setFocus();
                     break;
             }
         }
@@ -142,10 +161,11 @@
                 <mx:LinkBar id="linkButtonBar" iconField="ico" itemClick="linkButtonBar_itemClickHandler(event)">
                     <mx:dataProvider>
                         <s:ArrayCollection>
-                            <fx:Object label="reload" itemData="0" ico="@Embed('/assets/img/reload.png')"/>
-                            <fx:Object label="add" itemData="0" ico="@Embed('/assets/img/add.png')"/>
-                            <fx:Object label="delete" itemData="2" ico="@Embed('/assets/img/delete.png')"/>
-                            <fx:Object label="export" itemData="3" ico="@Embed('/assets/img/export.png')"/>
+                            <fx:Object label="reload" ico="@Embed('/assets/img/reload.png')"/>
+                            <fx:Object label="add" ico="@Embed('/assets/img/add.png')"/>
+                            <fx:Object label="edit" ico="@Embed('/assets/img/edit.png')"/>
+                            <fx:Object label="delete" ico="@Embed('/assets/img/delete.png')"/>
+                            <fx:Object label="export" ico="@Embed('/assets/img/export.png')"/>
                         </s:ArrayCollection>
                     </mx:dataProvider>
                 </mx:LinkBar>

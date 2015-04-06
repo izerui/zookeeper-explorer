@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!--
+  Created by Administrator on 2015/4/6.
+-->
+<mx:Panel xmlns:fx="http://ns.adobe.com/mxml/2009"
+          xmlns:mx="library://ns.adobe.com/flex/mx"
+          xmlns:s="library://ns.adobe.com/flex/spark"
+          title="edit"
+          layout="vertical"
+          width="500" height="350" verticalAlign="middle" horizontalAlign="center">
+
+    <fx:Script>
+		<![CDATA[
+        import com.adobe.cairngorm.control.CairngormEventDispatcher;
+        import com.izerui.zookeeper.flex.dto.Node;
+        import com.izerui.zookeeper.flex.event.EditDataEvent;
+
+        import mx.managers.PopUpManager;
+
+        public var node:Node;
+
+
+        private function close():void {
+            PopUpManager.removePopUp(this);
+        }
+
+        private function button1_clickHandler(event:MouseEvent):void {
+            var bytes:ByteArray  = null;
+            if(dataArea.text!=null&&dataArea.text!=""){
+                bytes = new ByteArray();
+                bytes.writeUTFBytes(dataArea.text);
+            }
+            node.data = bytes;
+
+            CairngormEventDispatcher.getInstance().dispatchEvent(new EditDataEvent(node,
+                function(data:Object):void{
+                    close();
+                }
+            ));
+        }
+        ]]>
+	</fx:Script>
+
+    <mx:Form>
+        <mx:FormItem label="node:">
+            <mx:TextArea width="350" height="80" text="{node.name}" editable="false"/>
+        </mx:FormItem>
+        <mx:FormItem label="data:">
+            <mx:TextArea id="dataArea" width="350" height="80" text="{node.data}"/>
+        </mx:FormItem>
+    </mx:Form>
+
+    <mx:ControlBar>
+        <s:HGroup width="100%" horizontalAlign="right">
+            <mx:Button label="save" click="button1_clickHandler(event)"/>
+            <mx:Button label="cancel" click="close();"/>
+        </s:HGroup>
+    </mx:ControlBar>
+</mx:Panel>
