@@ -1,5 +1,7 @@
 # zookeeper-explorer
 
+* jdk version : 1.7+
+
 * java -jar zookeeper-explorer-1.0.1-RELEASE-exec.jar --server.port=8099 --server.context-path=/zookeeper-explorer --zookeeper.connectionString=localhost:2181
 
 * visit: http://localhost:8099/zookeeper-explorer
