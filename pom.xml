@@ -6,7 +6,7 @@
 
     <groupId>com.izerui</groupId>
     <artifactId>zookeeper-explorer</artifactId>
-    <version>1.0.1-RELEASE</version>
+    <version>1.0.2-RELEASE</version>
     <organization>
         <name>Serv Software, Inc.</name>
         <url>http://www.izerui.com</url>
