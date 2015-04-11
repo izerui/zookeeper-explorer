@@ -12,6 +12,13 @@ users:
 	[administrator]: root/root1234
 	[guest]: guest/guest1234
 
-
+file: https://github.com/izerui/zookeeper-explorer/releases/tag/1.0.1-RELEASE
 
 ![img](https://raw.githubusercontent.com/izerui/zookeeper-explorer/master/src/main/resources/public/assets/img/sample.png)
+
+1. spring boot 
+2. flex
+3. zookeeper curator client
+4. shiro security
+5. fastxml jackson 
+6. spring mvc restful
