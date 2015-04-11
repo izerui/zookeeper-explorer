@@ -23,7 +23,7 @@
 
         private function button1_clickHandler(event:MouseEvent):void {
             trace(parentNode.fullPath);
-            var validates:Array = Validator.validateAll([nodeInput]);
+            var validates:Array = Validator.validateAll([nodeInputValidator]);
             if (validates.length > 0) {
                 return;
             }
