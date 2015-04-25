@@ -1,20 +1,18 @@
 package com.izerui.zookeeper.command.path;
 
 import com.izerui.zookeeper.command.Command;
+import com.izerui.zookeeper.support.ZkClientException;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.utils.EnsurePath;
 import org.apache.curator.utils.ZKPaths;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 创建path，注意临时节点不可以有子节点
  * Created by serv on 2015/3/9.
  */
 public class CreatePathCommand implements Command {
-    private Logger logger = LoggerFactory.getLogger(CreatePathCommand.class);
 
     protected String path;
     protected byte[] data;
@@ -54,8 +52,7 @@ public class CreatePathCommand implements Command {
     public void command(CuratorFramework client) throws Exception {
         Stat stat = client.checkExists().forPath(path);
         if(stat!=null){
-            logger.warn("节点已存在 {}",path);
-            return;
+            throw new ZkClientException("node aready exists");
         }
         ensureParent(client);
         if(data!=null){

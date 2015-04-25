@@ -25,17 +25,17 @@
         }
 
         private function button1_clickHandler(event:MouseEvent):void {
-            var bytes:ByteArray  = null;
-            if(dataArea.text!=null&&dataArea.text!=""){
+            var bytes:ByteArray = null;
+            if (dataArea.text != null && dataArea.text != "") {
                 bytes = new ByteArray();
                 bytes.writeUTFBytes(dataArea.text);
             }
             node.data = bytes;
 
             CairngormEventDispatcher.getInstance().dispatchEvent(new EditDataEvent(node,
-                function(data:Object):void{
-                    close();
-                }
+                    function (data:Object):void {
+                        close();
+                    }
             ));
         }
         ]]>

@@ -88,7 +88,7 @@
                                         var parentNode:Node = (myADG.selectedItem as Node).parent;
                                         var children:ArrayCollection = parentNode.children;
                                         children.removeItemAt(children.getItemIndex((myADG.selectedItem as Node)));
-                                        if(children.length==0){
+                                        if (children.length == 0) {
                                             parentNode.hasChildren = false;
                                             parentNode.children = null;
                                             treeData.itemUpdated(parentNode);
@@ -120,14 +120,13 @@
         }
 
         [Bindable]
-        public function get endpoint():String{
+        public function get endpoint():String {
             var url:String = this.url;
-            url = url.substring(0,url.lastIndexOf("/"));
+            url = url.substring(0, url.lastIndexOf("/"));
             trace(url);
             url += "/messagebroker/amf";
             return url;
         }
-
         ]]>
     </fx:Script>
 

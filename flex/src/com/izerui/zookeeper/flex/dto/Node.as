@@ -4,7 +4,6 @@ import com.adobe.cairngorm.vo.IValueObject;
 import flash.utils.ByteArray;
 
 import mx.collections.ArrayCollection;
-import mx.collections.Sort;
 
 [Bindable]
 [RemoteClass(alias="com.izerui.zookeeper.dto.Node")]

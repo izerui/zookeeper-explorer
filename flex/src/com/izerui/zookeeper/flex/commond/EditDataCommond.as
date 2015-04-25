@@ -2,9 +2,7 @@ package com.izerui.zookeeper.flex.commond
 {
 import com.adobe.cairngorm.commands.ICommand;
 import com.adobe.cairngorm.control.CairngormEvent;
-import com.izerui.zookeeper.flex.business.DeletePathDelegate;
 import com.izerui.zookeeper.flex.business.EditDataDelegate;
-import com.izerui.zookeeper.flex.event.DeletePathEvent;
 import com.izerui.zookeeper.flex.event.EditDataEvent;
 
 import mx.controls.Alert;
