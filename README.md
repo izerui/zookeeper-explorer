@@ -29,4 +29,4 @@ file: https://github.com/izerui/zookeeper-explorer/releases/tag/1.0.2-RELEASE
 
 # flex is deprecated:
 ## So, can use zkui for docker or k8s:
-https://hub.docker.com/repository/docker/izerui/zkui
+https://hub.docker.com/r/izerui/zkui
