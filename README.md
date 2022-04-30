@@ -1,5 +1,7 @@
 # zookeeper-explorer
 
+
+
 * jdk version : 1.7+
 
 * java -jar zookeeper-explorer-1.0.2-RELEASE-exec.jar --server.port=8099 --server.context-path=/zookeeper-explorer --zookeeper.connectionString=127.0.0.1:2181
@@ -22,3 +24,9 @@ file: https://github.com/izerui/zookeeper-explorer/releases/tag/1.0.2-RELEASE
 4. shiro security
 5. fastxml jackson 
 6. spring mvc restful
+
+
+
+# flex is deprecated:
+## So, can use this with docker or k8s:
+https://hub.docker.com/repository/docker/izerui/zkui
